@@ -1,41 +1,44 @@
-$(document).ready(function(){
-    $("#searchBtn").click(function(){
-        var div = $("#boxSearch");
-        div.animate({height: '+=100px'}, "slow");
-		div.animate({left: '-=150px'}, "slow");
-        div.animate({width: '+=300px'}, "slow");
-        // div.animate({right: '+=100px'}, "slow");
+var searchBtnCount = 0;
 
-        $("#weatherInfo").show();
-    });
+const API_KEY = "49460e11ec90a8ee40f7bb2f1aa1c0e8";
+
+function loadInfo(data){
+	alert(data.name);
+	console.log(data.name + data.sys.country);
+	$('#cityName').append(data.name);
+	$('#countryName').append(data.sys.country);	
+	$('#temp').append(parseFloat(data.main.temp) - 273.15 + " &deg;C");
+	$('#wind').append(data.wind.speed + " km/h");
+}
+
+$(document).ready(function(){
+
+	    $("#searchBtn").click(function(){
+			if(searchBtnCount == 0){
+	   			searchBtnCount++;
+	        	var div = $("#boxSearch");
+		        div.animate({height: '+=100px'}, "slow");
+				div.animate({left: '-=150px'}, "slow");
+		        div.animate({width: '+=300px'}, "slow");
+		        $("#weatherInfo").show();
+			}
+			var input = $('#placeInput').val()
+			apiCall(input);
+	    });
 });
 
-function apiCall(city, region){
-	
+function apiCall(city){
+
     $.ajax({
-        url: "http://localhost:8080/rest-ajax-homework/api/cars",
+        url: `http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`,
         type: "GET",
         dataType: "json",
-        data: {
-            "manufacturer" : filterManufacturer,
-            "model" : filterModel,
-            "year" : filterYear,
-            "engineType" : filterEngine,
-            "page": currentPageLoaded++
-        },
         success: function (data) {
-            $.each(data, function (index) {
-                loadIntoTable(data[index]);
-            })
-            isGettingRequest = true;
+        	console.log("Success")
+        	loadInfo(data);
         },
-        error: function () {
-            $('#noMoreToLoad').empty();
-            var paragraph = $('<p>');
-            paragraph.append('<b>No more cars to load<b>');
-            paragraph.append('</p>');
-            $('#noMoreToLoad').append(paragraph);
-            isEndOfTableReached = true;
+        error: function (data) {
+			alert("Error" + data.cod);
         }
     })
 }

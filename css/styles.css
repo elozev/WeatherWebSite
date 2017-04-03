@@ -3,6 +3,17 @@ body{
   margin: 0;
 }
 
+.vid-container{
+  position: relative;
+}
+
+.row{
+  position: absolute;
+  margin: 5px;
+  color: white;
+  bottom: 0;
+}
+
 .bgvid{
   position:fixed;
   left:0;
@@ -20,6 +31,7 @@ body{
 
 .box{
   position:absolute;
+  top: 0;
   height:100%;
   width:100%;
   font-family:Helvetica;
